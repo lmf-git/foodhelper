@@ -47,7 +47,7 @@
 			No key yet.
 			<a href="https://spoonacular.com/food-api/console#Dashboard" target="_blank" rel="noreferrer noopener">
 				Get a free one
-			</a> — 150 points a day, no card needed.
+			</a> — free, no card needed.
 		{/if}
 	</p>
 
@@ -116,10 +116,27 @@
 <section class="card block">
 	<h2>Cache</h2>
 	<dl class="figures">
-		<div><dt>Requests today</dt><dd>{settings.requestsToday}<span class="muted"> / ~150 free</span></dd></div>
+		<div>
+			<dt>Requests today</dt>
+			<dd>{settings.requestsToday}</dd>
+		</div>
+		<div>
+			<dt>Points left</dt>
+			<dd>
+				{#if settings.quotaLeft === null}
+					<span class="unknown">—</span>
+				{:else}
+					{Math.round(settings.quotaLeft * 10) / 10}
+				{/if}
+			</dd>
+		</div>
 		<div><dt>Cached responses</dt><dd>{cache.entries}</dd></div>
 		<div><dt>On disk</dt><dd>{size}</dd></div>
 	</dl>
+	<p class="fine muted">
+		Points left is whatever Spoonacular reported on the last response, and resets at
+		midnight UTC. A search costs about one point; a page of results costs a little more.
+	</p>
 	<p class="fine muted">
 		Searches are cached for a day; individual recipes are kept indefinitely, since a published
 		recipe doesn't change. Repeating a search or rebuilding a list costs nothing.
@@ -144,7 +161,10 @@
 	}
 
 	h2 {
-		font-size: 1rem;
+		font-family: var(--font-display);
+		font-size: 1.15rem;
+		font-weight: 600;
+		font-variation-settings: 'SOFT' 20, 'WONK' 1;
 		margin-bottom: 0.5rem;
 	}
 
@@ -198,7 +218,7 @@
 	dd {
 		margin: 0.15rem 0 0;
 		font-size: 1.3rem;
-		font-weight: 650;
+		font-weight: 600;
 		font-variant-numeric: tabular-nums;
 	}
 
@@ -207,8 +227,13 @@
 		font-weight: 500;
 	}
 
+	.unknown {
+		color: var(--muted);
+		font-weight: 400;
+	}
+
 	.danger {
-		color: var(--accent);
-		border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+		color: var(--hot);
+		border-color: color-mix(in srgb, var(--hot) 40%, var(--line));
 	}
 </style>

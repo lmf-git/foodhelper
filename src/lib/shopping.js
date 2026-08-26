@@ -37,51 +37,64 @@ function aisleOf(ingredient) {
 	return raw && raw.length ? raw : 'Other';
 }
 
+/*
+ * Canonical spellings only — plurals are handled by stripping the trailing "s"
+ * below. Spoonacular returns both "tsp" and "tsps", "Tbsp" and "Tbsps" for the
+ * same measure, and without this the same ingredient lands on two separate lines.
+ */
 const UNIT_ALIASES = {
 	'': '',
-	g: 'g',
 	gram: 'g',
-	grams: 'g',
-	gs: 'g',
-	kg: 'kg',
-	kgs: 'kg',
+	gm: 'g',
 	kilogram: 'kg',
-	kilograms: 'kg',
-	ml: 'ml',
 	milliliter: 'ml',
-	milliliters: 'ml',
 	millilitre: 'ml',
-	l: 'l',
 	liter: 'l',
-	liters: 'l',
 	litre: 'l',
-	tsp: 'tsp',
 	teaspoon: 'tsp',
-	teaspoons: 'tsp',
-	tbsp: 'tbsp',
 	tablespoon: 'tbsp',
-	tablespoons: 'tbsp',
-	cup: 'cup',
-	cups: 'cup',
-	oz: 'oz',
 	ounce: 'oz',
-	ounces: 'oz',
-	lb: 'lb',
 	pound: 'lb',
-	pounds: 'lb',
-	clove: 'clove',
-	cloves: 'clove',
-	serving: 'serving',
-	servings: 'serving',
-	pinch: 'pinch',
-	pinches: 'pinch',
-	slice: 'slice',
-	slices: 'slice'
+	lbs: 'lb',
+	package: 'pkg',
+	packages: 'pkg'
 };
+
+/** Word units that read wrong in the singular: "2 cloves", not "2 clove". */
+const PLURALISE = new Set([
+	'clove', 'cup', 'slice', 'serving', 'pinch', 'drop', 'strip', 'head', 'leaf',
+	'scoop', 'ball', 'sprig', 'stalk', 'bunch', 'can', 'pkg', 'handful', 'piece',
+	'fillet', 'sheet', 'stick'
+]);
+
+/** "tsps" -> "tsp", "eggs" -> "egg". The "ss" guard keeps words like "glass" whole. */
+function singularize(word) {
+	return word.length > 2 && word.endsWith('s') && !word.endsWith('ss') ? word.slice(0, -1) : word;
+}
 
 function normalizeUnit(unit) {
 	const u = unit.trim().toLowerCase();
-	return UNIT_ALIASES[u] ?? u;
+	if (u in UNIT_ALIASES) return UNIT_ALIASES[u];
+
+	const singular = singularize(u);
+	return singular in UNIT_ALIASES ? UNIT_ALIASES[singular] : singular;
+}
+
+/*
+ * The grouping key for an ingredient. Spoonacular is inconsistent in both
+ * directions: "butter" and "unsalted butter" are different ids that both clean to
+ * "butter", while "egg" and "eggs" share one id but clean to different names. So
+ * key on the cleaned name, singularized — never on the id.
+ */
+function identityOf(name) {
+	return singularize(name.trim().toLowerCase().replace(/\s+/g, ' '));
+}
+
+/** How a unit should read next to a given amount: "2 cloves", "3 pinches", "1 clove". */
+export function displayUnit(amount, unit) {
+	if (!PLURALISE.has(unit) || amount === 1) return unit;
+	if (unit === 'leaf') return 'leaves';
+	return /(ch|sh|s|x|z)$/.test(unit) ? `${unit}es` : `${unit}s`;
 }
 
 function titleCase(name) {
@@ -124,8 +137,7 @@ export function buildList(recipes, options) {
 			const name = titleCase((ingredient.nameClean || ingredient.name || '').trim());
 			if (!name) continue;
 
-			const identity = ingredient.id ?? name.toLowerCase();
-			const key = `${identity}|${unit}`;
+			const key = `${identityOf(name)}|${unit}`;
 			const existing = lines.get(key);
 
 			if (existing) {
@@ -168,7 +180,7 @@ export function toText(groups) {
 	return groups
 		.map(({ aisle, lines }) => {
 			const items = lines.map((l) => {
-				const qty = [formatAmount(l.amount), l.unit].filter(Boolean).join(' ');
+				const qty = [formatAmount(l.amount), displayUnit(l.amount, l.unit)].filter(Boolean).join(' ');
 				return `- ${l.name}${qty ? ` — ${qty}` : ''}`;
 			});
 			return `${aisle}\n${items.join('\n')}`;

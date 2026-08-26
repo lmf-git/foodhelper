@@ -1,5 +1,5 @@
 <script>
-	import { buildList, formatAmount, groupByAisle, toText } from '$lib/shopping';
+	import { buildList, displayUnit, formatAmount, groupByAisle, toText } from '$lib/shopping';
 	import { library } from '$lib/stores/library.svelte';
 	import { list } from '$lib/stores/list.svelte';
 	import { plan } from '$lib/stores/plan.svelte';
@@ -125,7 +125,7 @@
 									onchange={() => list.toggle(line.key)}
 								/>
 								<span class="name">{line.name}</span>
-								<span class="qty">{formatAmount(line.amount)} {line.unit}</span>
+								<span class="qty">{formatAmount(line.amount)} {displayUnit(line.amount, line.unit)}</span>
 							</label>
 							{#if line.from.length > 1}
 								<p class="from muted">for {line.from.join(', ')}</p>
@@ -202,7 +202,7 @@
 		border-radius: 999px;
 		padding: 0 0.45em;
 		font-size: 0.8rem;
-		font-weight: 650;
+		font-weight: 600;
 	}
 
 	.servings input {
@@ -215,11 +215,11 @@
 	}
 
 	.notice {
-		background: var(--accent-soft);
-		color: var(--accent);
+		background: var(--hot-soft);
+		color: var(--hot);
 		border-radius: 10px;
 		padding: 0.7rem 0.9rem;
-		font-weight: 550;
+		font-weight: 500;
 	}
 
 	.aisles {
@@ -234,11 +234,22 @@
 	}
 
 	.aisle h2 {
-		font-size: 0.78rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.72rem;
+		font-weight: 700;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		color: var(--muted);
-		margin-bottom: 0.6rem;
+		letter-spacing: 0.1em;
+		color: var(--accent);
+		margin-bottom: 0.5rem;
+	}
+
+	.aisle h2::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: var(--line);
 	}
 
 	.aisle ul {
@@ -324,6 +335,6 @@
 	}
 
 	.chips button:hover {
-		color: var(--accent);
+		color: var(--hot);
 	}
 </style>

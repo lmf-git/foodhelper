@@ -134,11 +134,11 @@
 	}
 
 	.notice {
-		background: var(--accent-soft);
-		color: var(--accent);
+		background: var(--hot-soft);
+		color: var(--hot);
 		border-radius: 10px;
 		padding: 0.7rem 0.9rem;
-		font-weight: 550;
+		font-weight: 500;
 	}
 
 	.week {
@@ -206,7 +206,7 @@
 
 	.title {
 		font-size: 0.85rem;
-		font-weight: 550;
+		font-weight: 500;
 		line-height: 1.25;
 		overflow: hidden;
 		display: -webkit-box;

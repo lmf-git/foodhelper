@@ -1,11 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-	<rect width="32" height="32" rx="8" fill="#b8410f" />
+	<rect width="32" height="32" rx="8" fill="#35603c" />
 	<path
-		d="M10 7v7a3 3 0 0 0 2 2.8V25h2V16.8A3 3 0 0 0 16 14V7h-1.6v6h-1.2V7h-1.6v6h-1.2V7Z"
-		fill="#fbf7f2"
+		d="M10 6.5v7.2a3 3 0 0 0 2 2.8V25.5h2V16.5a3 3 0 0 0 2-2.8V6.5h-1.6v6.1h-1.2V6.5h-1.6v6.1h-1.2V6.5Z"
+		fill="#f6f2e7"
 	/>
-	<path
-		d="M21.5 7c-1.7 0-2.8 2.2-2.8 5.5 0 2.4.6 4 1.6 4.6V25h2.2V7Z"
-		fill="#fbf7f2"
-	/>
+	<path d="M21.6 6.5c-1.8 0-2.9 2.3-2.9 5.7 0 2.5.6 4.1 1.7 4.7v8.6h2.3V6.5Z" fill="#f6f2e7" />
 </svg>

@@ -102,7 +102,7 @@
 
 	.thumb {
 		position: relative;
-		aspect-ratio: 16 / 10;
+		aspect-ratio: 4 / 3;
 		background: var(--surface-2);
 	}
 
@@ -131,7 +131,7 @@
 		display: grid;
 		place-items: center;
 		font-size: 0.85rem;
-		font-weight: 800;
+		font-weight: 700;
 		background: color-mix(in srgb, var(--surface) 80%, transparent);
 		border: 1px solid var(--line);
 		backdrop-filter: blur(6px);
@@ -144,8 +144,12 @@
 	}
 
 	h3 {
-		font-size: 1rem;
-		padding: 0.75rem 0.85rem 0;
+		font-family: var(--font-display);
+		font-size: 1.06rem;
+		font-weight: 600;
+		font-variation-settings: 'SOFT' 20, 'WONK' 1;
+		line-height: 1.2;
+		padding: 0.8rem 0.85rem 0;
 	}
 
 	.meta {
@@ -160,8 +164,9 @@
 	.pill {
 		border-radius: 999px;
 		padding: 0.1rem 0.5rem;
-		font-size: 0.75rem;
-		font-weight: 650;
+		font-size: 0.72rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
 		background: var(--surface-2);
 	}
 
@@ -171,8 +176,8 @@
 	}
 
 	.d-hard {
-		background: var(--accent-soft);
-		color: var(--accent);
+		background: var(--hot-soft);
+		color: var(--hot);
 	}
 
 	.actions {

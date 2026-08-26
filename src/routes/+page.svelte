@@ -9,7 +9,9 @@
 
 	let query = $state('');
 	let cuisine = $state('');
-	let type = $state('main course');
+	// Deliberately unset: Spoonacular's dishTypes are narrow, and defaulting to
+	// 'main course' silently hides things like empanadas, which it tags as appetizers.
+	let type = $state('');
 	let difficulty = $state('');
 	let maxTime = $state('');
 
@@ -203,9 +205,9 @@
 	}
 
 	.error {
-		background: var(--accent-soft);
-		color: var(--accent);
-		font-weight: 550;
+		background: var(--hot-soft);
+		color: var(--hot);
+		font-weight: 500;
 	}
 
 	.status {
@@ -215,7 +217,7 @@
 
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
 		gap: 1rem;
 	}
 

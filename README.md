@@ -17,8 +17,13 @@ npm run dev
 
 ## The API key
 
-Open Settings and paste a Spoonacular key. The free tier gives 150 points a day and
-needs no card: <https://spoonacular.com/food-api/console#Dashboard>
+Open Settings and paste a Spoonacular key — free, no card needed:
+<https://spoonacular.com/food-api/console#Dashboard>
+
+The free tier is small (a key issued in Aug 2026 reported a 50-point daily budget, not
+the 150 the older docs mention), which is why the caching below matters. Settings shows
+the real points remaining, read from the `X-API-Quota-Left` header Spoonacular exposes
+on every response.
 
 The key lives in `localStorage` and nowhere else. There's no `.env`, no build-time
 variable, and nothing baked into the deployed files — a key compiled into a static
@@ -39,8 +44,9 @@ The free tier is small, so the data layer is built around not spending it:
   than one call per recipe.
 - Concurrent callers asking for the same thing share a single in-flight request.
 - Search only fires on submit, never per keystroke.
-- The Settings page shows requests used today and what's on disk. `localStorage` quota
-  errors evict the oldest half of the cache rather than failing the write.
+- The Settings page shows requests used today, points remaining, and what's on disk.
+  `localStorage` quota errors evict the oldest half of the cache rather than failing
+  the write.
 
 ## Difficulty
 

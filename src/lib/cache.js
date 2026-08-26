@@ -1,7 +1,7 @@
 /**
  * localStorage-backed cache. The whole point of this app's data layer: Spoonacular's
- * free tier is 150 points/day, so every response we can serve from disk is a request
- * we never send.
+ * free tier has a small daily point budget, so every response we can serve from disk
+ * is a request we never send.
  *
  * Entries are stored as { v: value, e: expiry epoch ms (0 = never), w: written at }.
  */

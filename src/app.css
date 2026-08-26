@@ -1,32 +1,51 @@
+/* Fraunces for anything that should read like a cookbook headline, DM Sans for
+   everything you actually operate. */
 :root {
-	--bg: #fbf7f2;
-	--surface: #ffffff;
-	--surface-2: #f4ede4;
-	--line: #e5dbcd;
-	--text: #241d16;
-	--muted: #7a6a58;
-	--accent: #b8410f;
-	--accent-soft: #fbe7dd;
-	--accent-text: #ffffff;
-	--good: #2f6b3d;
-	--radius: 14px;
-	--shadow: 0 1px 2px rgb(36 29 22 / 0.06), 0 8px 24px rgb(36 29 22 / 0.06);
+	--font-display: Fraunces, 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+	--font-ui: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+	/* Market palette: paper, herb green, ripe tomato. */
+	--bg: #f1ebdb;
+	--surface: #fffdf6;
+	--surface-2: #e6dcc5;
+	--line: #d2c6a9;
+	--text: #1b2115;
+	--muted: #66634d;
+
+	--accent: #35603c;
+	--accent-soft: #e2ebdd;
+	--accent-text: #fffdf7;
+
+	--hot: #b8402a;
+	--hot-soft: #f6e2dc;
+
+	--good: #35603c;
+
+	--radius: 12px;
+	--shadow: 0 1px 2px rgb(30 36 23 / 0.05), 0 10px 28px rgb(30 36 23 / 0.07);
+
 	color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--bg: #17130f;
-		--surface: #211b16;
-		--surface-2: #2b231c;
-		--line: #3a2f26;
-		--text: #f2e9df;
-		--muted: #a2907c;
-		--accent: #f2703a;
-		--accent-soft: #3a2117;
-		--accent-text: #1a1209;
-		--good: #7bc48c;
-		--shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.3);
+		--bg: #13170f;
+		--surface: #1b2015;
+		--surface-2: #252b1c;
+		--line: #363d29;
+		--text: #ece7d6;
+		--muted: #9a9880;
+
+		--accent: #8cbb73;
+		--accent-soft: #26311d;
+		--accent-text: #12170c;
+
+		--hot: #e57a5e;
+		--hot-soft: #331d16;
+
+		--good: #8cbb73;
+
+		--shadow: 0 1px 2px rgb(0 0 0 / 0.45), 0 10px 28px rgb(0 0 0 / 0.35);
 	}
 }
 
@@ -43,9 +62,9 @@ body {
 body {
 	background: var(--bg);
 	color: var(--text);
-	font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	font-family: var(--font-ui);
 	font-size: 16px;
-	line-height: 1.5;
+	line-height: 1.55;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -53,13 +72,21 @@ h1,
 h2,
 h3 {
 	margin: 0;
-	line-height: 1.2;
-	letter-spacing: -0.02em;
-	font-weight: 650;
+	line-height: 1.15;
+	font-weight: 600;
+}
+
+/* Page titles get the serif; small uppercase section labels stay in the sans. */
+h1 {
+	font-family: var(--font-display);
+	font-optical-sizing: auto;
+	font-variation-settings: 'SOFT' 20, 'WONK' 1;
+	letter-spacing: -0.015em;
 }
 
 a {
 	color: var(--accent);
+	text-underline-offset: 2px;
 }
 
 button,
@@ -86,8 +113,8 @@ button {
 	border: 1px solid var(--line);
 	background: var(--surface);
 	border-radius: 999px;
-	padding: 0.5rem 1rem;
-	font-weight: 550;
+	padding: 0.5rem 1.05rem;
+	font-weight: 500;
 	transition: background 0.12s ease, border-color 0.12s ease;
 }
 
@@ -102,8 +129,8 @@ button {
 }
 
 .btn-primary:hover {
-	filter: brightness(1.08);
 	background: var(--accent);
+	filter: brightness(1.1);
 }
 
 .btn:disabled {
@@ -114,7 +141,7 @@ button {
 .field {
 	background: var(--surface);
 	border: 1px solid var(--line);
-	border-radius: 10px;
+	border-radius: 9px;
 	padding: 0.5rem 0.7rem;
 }
 
@@ -132,6 +159,15 @@ button {
 	max-width: 1120px;
 	margin: 0 auto;
 	padding: 0 1rem;
+}
+
+/* Small uppercase label used for aisles, days and stat captions. */
+.label {
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--muted);
 }
 
 .empty {

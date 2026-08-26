@@ -41,6 +41,8 @@ async function request(path, params) {
 		throw new ApiError('Could not reach Spoonacular. Check your connection.', 0);
 	}
 
+	readQuota(response);
+
 	if (!response.ok) {
 		if (response.status === 401) throw new ApiError('That API key was rejected.', 401);
 		if (response.status === 402)
@@ -51,6 +53,18 @@ async function request(path, params) {
 	}
 
 	return response.json();
+}
+
+/** Spoonacular CORS-exposes these, so the Settings page can show real numbers. */
+function readQuota(response) {
+	const num = (name) => {
+		const raw = response.headers.get(name);
+		const parsed = raw === null ? NaN : Number(raw);
+		return Number.isFinite(parsed) ? parsed : null;
+	};
+	const left = num('X-API-Quota-Left');
+	const used = num('X-API-Quota-Used');
+	if (left !== null || used !== null) settings.recordQuota(left, used);
 }
 
 function detailKey(id) {

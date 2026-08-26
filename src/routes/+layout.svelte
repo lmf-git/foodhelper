@@ -21,7 +21,19 @@
 <header>
 	<div class="wrap bar">
 		<a class="brand" href="/">
-			<span class="mark" aria-hidden="true">🍳</span>
+			<svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+				<path
+					d="M12 21V9"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.8"
+					stroke-linecap="round"
+				/>
+				<path
+					d="M12 12c0-3.3 2.4-6 5.5-6.6C17.8 8.9 15.4 12 12 12Zm0 3c0-2.7-2-5-4.6-5.5C7.2 12.2 9.3 15 12 15Z"
+					fill="currentColor"
+				/>
+			</svg>
 			<span>Mise</span>
 		</a>
 		<nav>
@@ -61,15 +73,20 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		font-weight: 700;
-		font-size: 1.1rem;
-		letter-spacing: -0.02em;
+		font-family: var(--font-display);
+		font-weight: 600;
+		font-size: 1.25rem;
+		font-variation-settings: 'SOFT' 30, 'WONK' 1;
+		letter-spacing: -0.01em;
 		color: var(--text);
 		text-decoration: none;
 	}
 
 	.mark {
-		font-size: 1.25rem;
+		width: 22px;
+		height: 22px;
+		color: var(--accent);
+		flex: none;
 	}
 
 	nav {
@@ -85,7 +102,7 @@
 		border-radius: 999px;
 		text-decoration: none;
 		color: var(--muted);
-		font-weight: 550;
+		font-weight: 500;
 		font-size: 0.94rem;
 	}
 
@@ -105,8 +122,8 @@
 		min-width: 1.35em;
 		padding: 0 0.35em;
 		border-radius: 999px;
-		background: var(--accent);
-		color: var(--accent-text);
+		background: var(--hot);
+		color: var(--surface);
 		font-size: 0.75rem;
 		font-weight: 700;
 		text-align: center;
