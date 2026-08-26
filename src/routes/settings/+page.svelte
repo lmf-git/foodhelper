@@ -1,4 +1,7 @@
 <script>
+	import NumberField from '$lib/components/NumberField.svelte';
+	import Select from '$lib/components/Select.svelte';
+	import TextField from '$lib/components/TextField.svelte';
 	import { clearAll, stats } from '$lib/cache';
 	import { list } from '$lib/stores/list.svelte';
 	import { plan } from '$lib/stores/plan.svelte';
@@ -8,6 +11,11 @@
 	let keyDraft = $state(settings.apiKey);
 	let saved = $state(false);
 	let cache = $state(stats());
+
+	const unitOptions = [
+		{ value: 'metric', label: 'Metric (g, ml)' },
+		{ value: 'us', label: 'US (cups, oz)' }
+	];
 
 	function saveKey() {
 		settings.apiKey = keyDraft;
@@ -52,15 +60,16 @@
 	</p>
 
 	<div class="row">
-		<input
-			class="field grow"
-			type="password"
-			bind:value={keyDraft}
-			placeholder="paste key here"
-			autocomplete="off"
-			spellcheck="false"
-			aria-label="Spoonacular API key"
-		/>
+		<div class="grow">
+			<TextField
+				type="password"
+				bind:value={keyDraft}
+				placeholder="paste key here"
+				label="Spoonacular API key"
+				clearable
+				onenter={saveKey}
+			/>
+		</div>
 		<button class="btn btn-primary" onclick={saveKey}>{saved ? 'Saved ✓' : 'Save'}</button>
 		{#if settings.apiKey}
 			<button
@@ -84,28 +93,16 @@
 <section class="card block">
 	<h2>Cooking</h2>
 	<div class="row">
-		<label class="inline">
+		<span class="inline">
 			Household size
-			<input
-				class="field small"
-				type="number"
-				min="1"
-				max="20"
-				value={settings.servings}
-				oninput={(e) => (settings.servings = Number(e.currentTarget.value))}
-			/>
-		</label>
-		<label class="inline">
+			<NumberField bind:value={settings.servings} min={1} max={20} label="Household size" />
+		</span>
+		<span class="inline">
 			Units
-			<select
-				class="field"
-				value={settings.units}
-				onchange={(e) => (settings.units = e.currentTarget.value)}
-			>
-				<option value="metric">Metric (g, ml)</option>
-				<option value="us">US (cups, oz)</option>
-			</select>
-		</label>
+			<span class="units">
+				<Select bind:value={settings.units} label="Units" options={unitOptions} />
+			</span>
+		</span>
 	</div>
 	<p class="fine muted">
 		Every recipe is scaled from its own yield to your household size before the shopping list adds
@@ -192,8 +189,8 @@
 		font-size: 0.92rem;
 	}
 
-	.small {
-		width: 4.5rem;
+	.units {
+		width: 11rem;
 	}
 
 	.fine {

@@ -1,5 +1,7 @@
 <script>
 	import RecipeCard from '$lib/components/RecipeCard.svelte';
+	import Select from '$lib/components/Select.svelte';
+	import TextField from '$lib/components/TextField.svelte';
 	import { difficultyOf } from '$lib/difficulty';
 	import { ApiError, CUISINES, MEAL_TYPES, search } from '$lib/spoonacular';
 	import { selection } from '$lib/stores/selection.svelte';
@@ -22,6 +24,28 @@
 	let error = $state('');
 	let servedFromCache = $state(false);
 	let searched = $state(false);
+
+	const cuisineOptions = [
+		{ value: '', label: 'Any cuisine' },
+		...CUISINES.map((c) => ({ value: c, label: c }))
+	];
+	const courseOptions = [
+		{ value: '', label: 'Any course' },
+		...MEAL_TYPES.map((t) => ({ value: t, label: t[0].toUpperCase() + t.slice(1) }))
+	];
+	const effortOptions = [
+		{ value: '', label: 'Any effort' },
+		{ value: 'easy', label: 'Easy' },
+		{ value: 'medium', label: 'Medium' },
+		{ value: 'hard', label: 'Involved' }
+	];
+	const timeOptions = [
+		{ value: '', label: 'Any time' },
+		{ value: 20, label: 'Under 20 min' },
+		{ value: 30, label: 'Under 30 min' },
+		{ value: 45, label: 'Under 45 min' },
+		{ value: 60, label: 'Under 1 hour' }
+	];
 
 	// Difficulty leans on ingredient count, which the API can't filter on, so the
 	// last cut happens here on what came back.
@@ -76,38 +100,29 @@
 </section>
 
 <form class="filters card" onsubmit={submit}>
-	<input
-		class="field grow"
-		type="search"
-		bind:value={query}
-		placeholder="milanesa, curry, empanada…"
-		aria-label="Search recipes"
-	/>
+	<div class="grow">
+		<TextField
+			type="search"
+			bind:value={query}
+			label="Search recipes"
+			placeholder="milanesa, curry, empanada…"
+			clearable
+			onenter={() => run(0)}
+		/>
+	</div>
 
-	<select class="field" bind:value={cuisine} aria-label="Cuisine">
-		<option value="">Any cuisine</option>
-		{#each CUISINES as c (c)}<option value={c}>{c}</option>{/each}
-	</select>
-
-	<select class="field" bind:value={type} aria-label="Meal type">
-		<option value="">Any course</option>
-		{#each MEAL_TYPES as t (t)}<option value={t}>{t}</option>{/each}
-	</select>
-
-	<select class="field" bind:value={difficulty} aria-label="Difficulty">
-		<option value="">Any effort</option>
-		<option value="easy">Easy</option>
-		<option value="medium">Medium</option>
-		<option value="hard">Involved</option>
-	</select>
-
-	<select class="field" bind:value={maxTime} aria-label="Maximum time">
-		<option value="">Any time</option>
-		<option value={20}>Under 20 min</option>
-		<option value={30}>Under 30 min</option>
-		<option value={45}>Under 45 min</option>
-		<option value={60}>Under 1 hour</option>
-	</select>
+	<div class="pick">
+		<Select bind:value={cuisine} label="Cuisine" options={cuisineOptions} />
+	</div>
+	<div class="pick">
+		<Select bind:value={type} label="Meal type" options={courseOptions} />
+	</div>
+	<div class="pick">
+		<Select bind:value={difficulty} label="Difficulty" options={effortOptions} />
+	</div>
+	<div class="pick">
+		<Select bind:value={maxTime} label="Maximum time" options={timeOptions} />
+	</div>
 
 	<button class="btn btn-primary" type="submit" disabled={loading}>
 		{loading ? 'Searching…' : 'Search'}
@@ -190,6 +205,11 @@
 
 	.grow {
 		flex: 1 1 16rem;
+		min-width: 0;
+	}
+
+	.pick {
+		flex: 0 1 10.5rem;
 		min-width: 0;
 	}
 

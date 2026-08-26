@@ -161,15 +161,6 @@ button {
 	padding: 0 1rem;
 }
 
-/* Small uppercase label used for aisles, days and stat captions. */
-.label {
-	font-size: 0.72rem;
-	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
-	color: var(--muted);
-}
-
 .empty {
 	text-align: center;
 	padding: 3.5rem 1rem;

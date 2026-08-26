@@ -1,4 +1,5 @@
 <script>
+	import Select from '$lib/components/Select.svelte';
 	import { DIFFICULTY_LABEL, difficultyOf, formatTime } from '$lib/difficulty';
 	import { DAYS, plan } from '$lib/stores/plan.svelte';
 	import { selection } from '$lib/stores/selection.svelte';
@@ -12,14 +13,11 @@
 	let addedTo = $state(null);
 	let flashTimer;
 
-	function addToDay(event) {
-		const select = event.currentTarget;
-		const day = Number(select.value);
-		if (Number.isNaN(day)) return;
+	const dayOptions = DAYS.map((day, i) => ({ value: i, label: day }));
 
+	function addToDay(day) {
 		plan.add(day, recipe.id);
 		addedTo = DAYS[day];
-		select.value = '';
 
 		clearTimeout(flashTimer);
 		flashTimer = setTimeout(() => (addedTo = null), 1800);
@@ -54,13 +52,15 @@
 	</div>
 
 	<div class="actions">
-		<label class="sr" for="day-{recipe.id}">Add {recipe.title} to a day</label>
-		<select id="day-{recipe.id}" class="field" onchange={addToDay} value="">
-			<option value="" disabled>Add to day…</option>
-			{#each DAYS as day, i (day)}
-				<option value={i}>{day}</option>
-			{/each}
-		</select>
+		<div class="day-pick">
+			<Select
+				action
+				options={dayOptions}
+				placeholder="Add to day…"
+				label="Add {recipe.title} to a day"
+				onselect={addToDay}
+			/>
+		</div>
 		{#if recipe.sourceUrl}
 			<a class="btn recipe-link" href={recipe.sourceUrl} target="_blank" rel="noreferrer noopener">
 				Recipe ↗
@@ -77,7 +77,6 @@
 	.card {
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
 		position: relative;
 		transition: border-color 0.14s ease, box-shadow 0.14s ease;
 	}
@@ -104,6 +103,8 @@
 		position: relative;
 		aspect-ratio: 4 / 3;
 		background: var(--surface-2);
+		border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+		overflow: hidden;
 	}
 
 	.thumb img {
@@ -187,11 +188,10 @@
 		margin-top: auto;
 	}
 
-	.actions select {
+	.day-pick {
 		flex: 1;
 		min-width: 0;
 		font-size: 0.85rem;
-		padding-block: 0.35rem;
 	}
 
 	.recipe-link {

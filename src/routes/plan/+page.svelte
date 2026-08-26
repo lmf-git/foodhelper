@@ -1,4 +1,5 @@
 <script>
+	import Select from '$lib/components/Select.svelte';
 	import { formatTime } from '$lib/difficulty';
 	import { library } from '$lib/stores/library.svelte';
 	import { DAYS, plan } from '$lib/stores/plan.svelte';
@@ -67,21 +68,18 @@
 								>
 								{#if recipe}<span class="muted small">{formatTime(recipe.readyInMinutes)}</span>{/if}
 							</div>
-							<select
-								class="mover"
-								aria-label="Move {recipe?.title ?? 'meal'} to another day"
-								value=""
-								onchange={(e) => {
-									const to = Number(e.currentTarget.value);
-									e.currentTarget.value = '';
-									if (!Number.isNaN(to)) plan.move(dayIndex, entryIndex, to);
-								}}
-							>
-								<option value="" disabled>↔</option>
-								{#each DAYS as target, i (target)}
-									{#if i !== dayIndex}<option value={i}>{target}</option>{/if}
-								{/each}
-							</select>
+							<div class="mover">
+								<Select
+									action
+									compact
+									placeholder="Move"
+									label="Move {recipe?.title ?? 'meal'} to another day"
+									options={DAYS.map((target, i) => ({ value: i, label: target })).filter(
+										(o) => o.value !== dayIndex
+									)}
+									onselect={(to) => plan.move(dayIndex, entryIndex, to)}
+								/>
+							</div>
 							<button
 								class="ghost remove"
 								aria-label="Remove {recipe?.title ?? 'meal'} from {day}"
@@ -240,12 +238,8 @@
 	}
 
 	.mover {
-		background: none;
-		border: 0;
-		color: var(--muted);
-		font-size: 0.8rem;
-		width: 2rem;
 		flex: none;
+		width: 5.2rem;
 	}
 
 	.blank {

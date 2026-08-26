@@ -1,4 +1,7 @@
 <script>
+	import Checkbox from '$lib/components/Checkbox.svelte';
+	import NumberField from '$lib/components/NumberField.svelte';
+	import Select from '$lib/components/Select.svelte';
 	import { buildList, displayUnit, formatAmount, groupByAisle, toText } from '$lib/shopping';
 	import { library } from '$lib/stores/library.svelte';
 	import { list } from '$lib/stores/list.svelte';
@@ -29,6 +32,11 @@
 	const doneCount = $derived(
 		groups.reduce((n, g) => n + g.lines.filter((l) => list.isChecked(l.key)).length, 0)
 	);
+
+	const unitOptions = [
+		{ value: 'metric', label: 'Metric (g, ml)' },
+		{ value: 'us', label: 'US (cups, oz)' }
+	];
 
 	let copied = $state(false);
 
@@ -64,38 +72,26 @@
 </div>
 
 <div class="controls card">
-	<label class="check">
-		<input type="checkbox" bind:checked={list.useSelection} />
-		Selected recipes <span class="count">{selection.count}</span>
-	</label>
-	<label class="check">
-		<input type="checkbox" bind:checked={list.usePlan} />
-		This week's plan <span class="count">{plan.count}</span>
-	</label>
+	<span class="check">
+		<Checkbox bind:checked={list.useSelection} label="Selected recipes" />
+		<span class="count">{selection.count}</span>
+	</span>
+	<span class="check">
+		<Checkbox bind:checked={list.usePlan} label="This week's plan" />
+		<span class="count">{plan.count}</span>
+	</span>
 
-	<label class="servings">
+	<span class="servings">
 		Cooking for
-		<input
-			class="field"
-			type="number"
-			min="1"
-			max="20"
-			value={settings.servings}
-			oninput={(e) => (settings.servings = Number(e.currentTarget.value))}
-		/>
-	</label>
+		<NumberField bind:value={settings.servings} min={1} max={20} label="Household size" />
+	</span>
 
-	<label class="servings">
+	<span class="servings">
 		Units
-		<select
-			class="field"
-			value={settings.units}
-			onchange={(e) => (settings.units = e.currentTarget.value)}
-		>
-			<option value="metric">Metric</option>
-			<option value="us">US</option>
-		</select>
-	</label>
+		<span class="units">
+			<Select bind:value={settings.units} label="Units" options={unitOptions} />
+		</span>
+	</span>
 </div>
 
 {#if library.error}
@@ -118,15 +114,17 @@
 				<ul>
 					{#each group.lines as line (line.key)}
 						<li class:done={list.isChecked(line.key)}>
-							<label>
-								<input
-									type="checkbox"
+							<span class="row">
+								<Checkbox
 									checked={list.isChecked(line.key)}
+									label={line.name}
 									onchange={() => list.toggle(line.key)}
 								/>
-								<span class="name">{line.name}</span>
-								<span class="qty">{formatAmount(line.amount)} {displayUnit(line.amount, line.unit)}</span>
-							</label>
+								<span class="qty">
+									{formatAmount(line.amount)}
+									{displayUnit(line.amount, line.unit)}
+								</span>
+							</span>
 							{#if line.from.length > 1}
 								<p class="from muted">for {line.from.join(', ')}</p>
 							{/if}
@@ -205,13 +203,8 @@
 		font-weight: 600;
 	}
 
-	.servings input {
-		width: 4rem;
-		padding-block: 0.3rem;
-	}
-
-	.servings select {
-		padding-block: 0.3rem;
+	.units {
+		width: 9.5rem;
 	}
 
 	.notice {
@@ -262,26 +255,32 @@
 		border-top: 1px solid var(--line);
 	}
 
-	.aisle label {
+	.row {
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		gap: 0.6rem;
-		padding: 0.45rem 0;
-		cursor: pointer;
+		padding: 0.4rem 0;
 	}
 
-	.name {
+	/* The checkbox takes the slack so the quantity always sits hard right. */
+	.row :global(.wrap) {
 		flex: 1;
+		min-width: 0;
+	}
+
+	.row :global(.text) {
+		line-height: 1.3;
 	}
 
 	.qty {
+		flex: none;
 		color: var(--muted);
 		font-variant-numeric: tabular-nums;
 		font-size: 0.9rem;
 		white-space: nowrap;
 	}
 
-	.done .name,
+	.done .row :global(.text),
 	.done .qty {
 		text-decoration: line-through;
 		opacity: 0.45;

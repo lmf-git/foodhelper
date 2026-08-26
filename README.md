@@ -65,6 +65,11 @@ functions, no server, no environment variables to configure.
 
 ```
 src/lib/
+  components/
+    Select.svelte       listbox — the ARIA combobox pattern, popup portalled to <body>
+    Checkbox.svelte     native input stripped with appearance:none, custom box and tick
+    TextField.svelte    text/search/password, browser furniture removed
+    NumberField.svelte  stepper; inputmode=numeric so phones get a keypad, no spinners
   spoonacular.js        API client — the only thing that makes network calls
   cache.js              localStorage cache: TTLs, quota eviction, request dedup
   shopping.js           merges ingredients across recipes, groups by aisle
@@ -77,6 +82,22 @@ src/lib/
     list.svelte.js      which pools feed the list, plus ticked-off items
     library.svelte.js   recipes currently on screen
 ```
+
+## Form controls
+
+Every control is hand-rolled — no component library, no dependencies.
+
+`Select` is a real reimplementation rather than a restyle, because a native `<select>`
+popup can't be styled at all. It follows the ARIA combobox pattern: focus stays on the
+trigger, the highlighted option is announced via `aria-activedescendant`, and it
+supports arrows, Home/End, Enter, Escape, Tab and type-to-jump. The popup is moved to
+`<body>` and positioned `fixed`, so a card's `overflow` or the shopping list's column
+layout can't clip it, and it flips above the trigger when there's no room below.
+
+`Checkbox` keeps the native `<input>` for semantics and keyboard handling but removes
+every browser-drawn pixel with `appearance: none`. `NumberField` avoids
+`<input type="number">` entirely — its spinners differ per browser and disappear on
+touch — using `inputmode="numeric"` with its own buttons instead.
 
 `npm run check` runs `svelte-check` over the templates. It pulls in the `typescript`
 package because that's the binary svelte-check drives, but nothing in `src/` is
